@@ -4,7 +4,6 @@ class UserController {
   static async registerNewUser(req, res, next) {
     try {
       const data = req.body;
-      data.role = "Admin";
 
       if (!data.username) throw { code: 400, error: "Username is required!" };
       else if (!data.email) throw { code: 400, error: "Email is required!" };
@@ -16,15 +15,18 @@ class UserController {
         throw { code: 400, error: "Phonenumber is required!" };
       else if (!data.address)
         throw { code: 400, error: "Address is required!" };
+      else if (!data.role || data.role !== 'admin' || data.role !== 'user')
+        throw { code: 400, error: "Role must be admin or user!" };
       const result = await UserModel.userCreateOne(data);
       res.status(201).json({
-        message: `A document was inserted with the _id: ${result.insertedId}`,
+        message: `Registered as ${data.role} success with id: ${result.insertedId}`,
         _id: `${result.insertedId}`,
         username: req.body.username,
         email: req.body.email,
         role: req.body.role,
       });
     } catch (err) {
+      // console.log(err)
       next(err);
     }
   }
@@ -40,11 +42,11 @@ class UserController {
       next(err);
     }
   }
-
+  
   static async getDetailUser(req, res, next) {
     try {
       const id = req.params.id;
-
+      
       const user = await UserModel.userFindOne(id);
       delete user.password;
       res.status(200).json(user);
@@ -52,9 +54,10 @@ class UserController {
       next(err);
     }
   }
-
+  
   static async deleteUser(req, res, next) {
     try {
+      if (!data.username) throw { code: 400, error: "Username is required!" };
       const id = req.params.id;
 
       const result = await UserModel.userDeleteById(id);
