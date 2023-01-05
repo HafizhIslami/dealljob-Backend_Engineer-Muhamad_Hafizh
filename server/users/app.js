@@ -1,6 +1,6 @@
 // if (process.env.NODE_ENV !== "production") {
 // }
-require("dotenv").config();
+// require("dotenv").config();
 
 const cors = require("cors");
 const express = require("express");
@@ -17,7 +17,7 @@ app.use(router);
 
 connectMongo()
   .then((db) => {
-    // console.log(db);
+    // console.log(db); + 
     app.listen(port, () => {
       console.log("app connected to " + port);
     });
